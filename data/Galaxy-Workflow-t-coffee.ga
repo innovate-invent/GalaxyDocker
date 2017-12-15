@@ -1,0 +1,149 @@
+{
+    "a_galaxy_workflow": "true", 
+    "annotation": "", 
+    "format-version": "0.1", 
+    "name": "t-coffee", 
+    "steps": {
+        "0": {
+            "annotation": "", 
+            "content_id": null, 
+            "errors": null, 
+            "id": 0, 
+            "input_connections": {}, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 694, 
+                "top": 423.5
+            }, 
+            "tool_id": null, 
+            "tool_state": "{}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "uuid": "a2a813c0-7148-4274-8460-cdfb79791c7c", 
+            "workflow_outputs": []
+        }, 
+        "1": {
+            "annotation": "", 
+            "content_id": "toolshed.g2.bx.psu.edu/repos/ayllon/tcoffee/T_coffee/10.00.r1613", 
+            "errors": null, 
+            "id": 1, 
+            "input_connections": {
+                "input": {
+                    "id": 0, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_pir_aln"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_dnd"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_score_html"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_phylip"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_score_ascii"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "method03"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "input"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_pir_seq"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "method01"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_fasta_seq"
+                }, 
+                {
+                    "description": "runtime parameter for tool T-COFFEE", 
+                    "name": "format_output_msf_aln"
+                }
+            ], 
+            "label": null, 
+            "name": "T-COFFEE", 
+            "outputs": [
+                {
+                    "name": "dnd", 
+                    "type": "nhx"
+                }, 
+                {
+                    "name": "msf_aln", 
+                    "type": "msf"
+                }, 
+                {
+                    "name": "clustalw_aln", 
+                    "type": "clustalw"
+                }, 
+                {
+                    "name": "pir_aln", 
+                    "type": "pir"
+                }, 
+                {
+                    "name": "fasta_aln", 
+                    "type": "fasta"
+                }, 
+                {
+                    "name": "phylip", 
+                    "type": "phyloxml"
+                }, 
+                {
+                    "name": "pir_seq", 
+                    "type": "pir"
+                }, 
+                {
+                    "name": "fasta_seq", 
+                    "type": "fasta"
+                }, 
+                {
+                    "name": "score_ascii", 
+                    "type": "ascii"
+                }, 
+                {
+                    "name": "score_html", 
+                    "type": "html"
+                }
+            ], 
+            "position": {
+                "left": 1026, 
+                "top": 296.5
+            }, 
+            "post_job_actions": {}, 
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/ayllon/tcoffee/T_coffee/10.00.r1613", 
+            "tool_shed_repository": {
+                "changeset_revision": "e65eb41717b4", 
+                "name": "tcoffee", 
+                "owner": "ayllon", 
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            }, 
+            "tool_state": "{\"format_output_pir_aln\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_dnd\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": null, \"format_output_fasta_aln\": \"\\\"no\\\"\", \"format_output_clustalw_aln\": \"\\\"yes\\\"\", \"__rerun_remap_job_id__\": null, \"method03\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_phylip\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_score_html\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_score_ascii\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_pir_seq\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"method02\": \"[\\\"kalign_msa\\\"]\", \"method01\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_fasta_seq\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"format_output_msf_aln\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\"}", 
+            "tool_version": "10.00.r1613", 
+            "type": "tool", 
+            "uuid": "0e7fc56b-aadf-409d-a67c-10f46f96c89b", 
+            "workflow_outputs": []
+        }
+    }, 
+    "uuid": "a430b3b4-9030-4aef-b48a-5f5b1ab7d184"
+}

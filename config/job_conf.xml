@@ -1,0 +1,54 @@
+<?xml version="1.0" ?><job_conf>
+    <plugins workers="4">
+        <plugin id="slurm" load="galaxy.jobs.runners.slurm:SlurmJobRunner" type="runner">
+            <param id="drmaa_library_path">/mnt/galaxy/slurm-drmaa/lib/libdrmaa.so</param>
+        </plugin>
+        <plugin id="pulsar_rest" load="galaxy.jobs.runners.pulsar:PulsarRESTJobRunner" type="runner"/>
+        <plugin id="local" load="galaxy.jobs.runners.local:LocalJobRunner" type="runner" workers="4"/>
+    </plugins>
+
+    <handlers default="handlers"><handler id="handler0" tags="handlers"><plugin id="slurm"/></handler><handler id="handler1" tags="handlers"><plugin id="slurm"/></handler><handler id="handler2" tags="handlers"><plugin id="slurm"/></handler></handlers>
+
+    <destinations default="slurm_cluster">
+        <destination id="slurm_cluster" runner="slurm"/>
+        <destination id="slurm_cluster_cpu4" runner="slurm">
+            <param id="nativeSpecification">--nodes=1 --ntasks=4</param>
+        </destination>
+        <destination id="pulsar_server" runner="pulsar_rest">
+            <param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
+        </destination>
+        <destination id="local_runner" runner="local"/>
+	<destination id="docker_slurm" runner="slurm">
+		<param id="docker_enabled">true</param>
+	</destination>
+    </destinations>
+
+    <tools>
+        <!-- <tool id="upload1" destination="local_runner" /> -->
+        <!-- <tool id="random_lines1" destination="pulsar_server" /> -->
+        <tool destination="slurm_cluster_cpu4" id="bowtie"/>
+        <tool destination="slurm_cluster_cpu4" id="bowtie2"/>
+        <tool destination="slurm_cluster_cpu4" id="sailfish"/>
+        <tool destination="slurm_cluster_cpu4" id="cuffmerge"/>
+        <tool destination="slurm_cluster_cpu4" id="cufflinks"/>
+        <tool destination="slurm_cluster_cpu4" id="currnorm"/>
+        <tool destination="slurm_cluster_cpu4" id="bwa"/>
+        <tool destination="slurm_cluster_cpu4" id="tophat_fusion"/>
+        <tool destination="slurm_cluster_cpu4" id="cuffquant"/>
+        <tool destination="slurm_cluster_cpu4" id="cuffdiff"/>
+        <tool destination="slurm_cluster_cpu4" id="bowtie2"/>
+        <tool destination="slurm_cluster_cpu4" id="tophat2"/>
+        <tool destination="slurm_cluster_cpu4" id="trimmomatic"/>
+        <tool destination="slurm_cluster_cpu4" id="hisat2"/>
+        <tool destination="slurm_cluster_cpu4" id="pear"/>
+        <tool destination="slurm_cluster_cpu4" id="diamond"/>
+        <tool destination="slurm_cluster_cpu4" id="spades"/>
+        <tool destination="slurm_cluster_cpu4" id="fastqc"/>
+        <tool destination="slurm_cluster_cpu4" id="stringtie"/>
+        <tool destination="slurm_cluster_cpu4" id="tsne"/>
+        <tool destination="slurm_cluster_cpu4" id="heatmap2"/>
+        <tool destination="slurm_cluster_cpu4" id="flagstat"/>
+        <tool destination="slurm_cluster_cpu4" id="deseq2"/>
+        <tool destination="slurm_cluster_cpu4" id="featurecounts"/>
+</tools>
+</job_conf>
