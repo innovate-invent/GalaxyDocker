@@ -1,14 +1,14 @@
-# Abstract
+## Abstract
 
 Reproducibility of data is crucial to science. Ease of reproducibility has numerous advantages and there are two very useful tools to aid with this. Galaxy is a workflow manager that ties together and manages the tools and scripts you use to process and analyse data. Docker is a powerful tool that you can use to encapsulate and isolate the runtime environments of your tools from the varied system environments they may face. With the ever growing scale of the datasets being processed, utilising large scale cloud computing is an economical option to generate results faster. Here we will discuss the various features of these tools and how to integrate them together on Amazon Cloud computing systems. We will also demonstrate how to integrate any tool or script that is not already available through Galaxy.
 
-# Preamble
+## Preamble
 
 Reproducibility is a core tenet of science. If others are not able to reproduce your findings then it invalidates any conclusions you may have made. This holds true in computational biology where the transformation of raw data into something analysable can be difficult to reproduce. A wide variation in computing environments and runtime parameters needs to be documented or constrained to ensure that any of these factors can be reproduced when transforming the data. To add to the complexity of this task, biological data is relatively large and requires a significant amount of computing power to process the data in a reasonable amount of time. Luckily there are numerous services available that allow you to rent large clusters of computers and set them to your own tasks. The systems that make up these clusters can significantly vary and steps need to be taken to insulate your work from them. 
 Utilising tools that make reproducibility easier does more than bolster the credibility of your work, it also makes it easier for others to utilise your work for their own purposes. The next person that want to use your work will also most likely be your future self. If after you have finalised publication and set the work aside forgetting about it, coming back to it later with a new purpose will be significantly easier if you take steps now to ensure ease of reproducibility. Even your current self will be rewarded by the extra effort taken. If erroneous results come up after a significant amount of time and effort was spent, then it will be much easier to iterate on the data while troubleshooting. 
 If you have any experience in the data sciences then you will know the tribulations of trying to install and configure all the necessary tools to process data. This is especially true when trying to follow a publication’s vague description of how they generated their results. Wouldn’t it have been nice if the authors had published their entire computing environment? With all the software nicely compiled and all the configuration options already set up? This is entirely possible with a couple pieces of software that we will now discuss.
 
-# Workflow Managers
+## Workflow Managers
 
 Let's begin with the idea of a workflow. A workflow is a series of tools and dataset actions that run in sequence to transform data into a useful form. It usually involves data conversion, filtration, transformation, aggregation, segmentation, processing, and visualisation. They can include a mixture of custom scripts, 3rd party software, and manual curation. A workflow manager is a piece of software that keeps track of and executes each step. The two most critical pieces of information that a workflow manager should keep track of is the software version of the tools and the input parameters.
 Here is a non-comprehensive list of workflow managers available from [wikipedia](https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system):
@@ -19,7 +19,7 @@ Here is a non-comprehensive list of workflow managers available from [wikipedia]
 
 When deciding on a workflow manager, there is a number of secondary qualities you should consider: ease of use, community support, extensibility, and extensive support for available tools. While BioBIKE may meet some specific use cases, it is not well suited for general tasks compared to the other options. Anduril has a steep learning curve and dependency on third party tools to get started. GenePattern and Galaxy are the two main contenders for general use. The defining quality that sets Galaxy apart from GenePattern is its graphical visualisation of the workflow. This makes it very easy and intuitive to get started with Galaxy with minimal training.
 
-# Galaxy Workflow
+## Galaxy Workflow
 
 <a href="images/welcometogalaxy.png"><img src="images/welcometogalaxy.png" class="screenshot" /></a>
 This is the first thing you will see when accessing a Galaxy instance. From just this image you can see that it has features supporting multiple users. You can share data and workflows to collaborate with colleagues while keeping everything in one place. Galaxy has a large repository of tools already integrated and many more are available to be easily downloaded and installed from its online “Tool Shed”. On the right you can see it keeps record of everything you do so that you can manually experiment on your data rather than having to predefine a workflow.
@@ -32,7 +32,7 @@ The best way to learn is by doing, so let's get you started with your own Galaxy
 
 
 
-# Amazon Web Services
+## Amazon Web Services
 
 <a href="images/AWS/AWS1.jpg"><img src="images/AWS/AWS1.jpg" class="screenshot" /></a>
 To sign up for AWS, first open the Amazon web services website [here](https://aws.amazon.com/) and click on “Complete Sign Up”.
@@ -105,7 +105,7 @@ Click on “Download .csv file” to save the access key ID and secret access ke
 
 In case you need more information about access keys, click [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
 
-# Cloudman
+## Cloudman
 
 Once you have an account with AWS and an access key ready, you can begin with launching an instance of Galaxy on their systems. One of Galaxy’s many features is the accompanying CloudMan project that removes all the guesswork of installing and configuring a complete instance. It is a relatively painless process, even for someone with zero experience with Galaxy or AWS.
 To begin, open the cloudman launcher [here](https://beta.launch.usegalaxy.org/).
@@ -193,12 +193,12 @@ Pay attention to the history on the right, it keeps track of everything you did 
 The workflow task will appear in the History on the right as a greyed out box. Wait until it turns green signifying that the computation is complete. You can then click on the task to expand its options, this provides a download icon that allows you to download the resulting alignment file. Back in the “Workflow” section you also have the option to download the workflow that you created so that you can send it to others and they can import it into their Galaxy instances.
 The best way to familiarise yourself with Galaxy is to play with its many tools and functions. The developers put in significant effort to ensure that someone can’t do any harm to the system from Galaxy, so you don’t have to worry when experimenting with the various features.
 
-# Runtime Environment Management
+## Runtime Environment Management
 
 Great, we have demonstrated that Galaxy can help ensure reproducibility of a workflow, but that is only half of the problem. Many tools available are affected by external factors within the system. Environment variables, runtime libraries, system configuration, filesystems, and external utilities to name some. The version, presence and state of these factors need to be managed. There are three leading solutions that address this, each with successively greater isolation from the host system. Anaconda is the least isolating and operates within the host environment. It manages software versioning and environment variables. It has a built-in package manager that allows easy installation of a rich library of utilities and applications. It is often paired with the next two solutions. VirtualBox is on the other end of the isolation spectrum. It provides a fully virtualized machine environment that is completely independent of the host system. The virtual machine runs its own operating system and installations and configurations of software. Although this seems like the ideal you would want, it comes at the cost of significant resource overhead and is also cumbersome to share the VM images. A reasonable compromise is Docker. It utilises linux containers to provide a level of isolation from the host system. You can *almost* think of it as a lightweight virtual machine but it has some critical differences from one. Each Docker container is provided with its own file system, network interfaces, and isolates the running processes on the system. For a more detailed comparison between Docker and a virtual machine see [here](https://stackoverflow.com/questions/16047306/how-is-docker-different-from-a-normal-virtual-machine).
 Docker is also very useful because it makes sharing images easier as they are significantly more lightweight.
 
-# Change a Galaxy tool to use Docker
+## Change a Galaxy tool to use Docker
 
 Let's look at adapting an existing tool in Galaxy to be packaged inside a Docker instance. We will run T-Coffee from Galaxy within a Docker container. Rather than going through the trouble of creating your own docker image, you should have a look on DockerHub for an existing image. It is very likely that someone else has already gone through the trouble. If you find that you need to build a custom Docker image then [here](https://deis.com/blog/2015/creating-sharing-first-docker-image/) is a quick runthrough of how. 
 To begin, open [DockerHub](https://hub.docker.com/) in a browser.
