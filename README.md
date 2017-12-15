@@ -332,3 +332,51 @@ No changes are needed for tcoffee.pl.
 
 Now, just refresh the galaxy webpage and there should be a new section “Docker tools” in the tool box.
 There you go, you can now run T-Coffee inside a Docker instance with Galaxy.
+
+## Add a custom script as a tool in Galaxy
+
+## Validate that the tool meets ToolShed standards with Planemo
+
+## Future Research
+
+The goal of all of this is to have a means of perfectly replicating resulting data. Despite the use of Galaxy and Docker, there is still one variable that has not been accounted for. Software that uses floating point math or is compiled to use extended architectural functionality may generate different results on different systems depending on the specifics of that architecture. No matter the level of isolation attained at the software level, it all has to hand off the operations to the hardware to actually compute. Any minor inconsistencies between hardware revisions or manufacturer could result in different data output. More research needs to be done to guarantee consistency of low level architectural operations.
+
+## Conclusion
+
+Now that you know how to better manage your workflows with some very powerful tools you may want to see what you have actually accomplished.
+We reproduced this tutorial on several different systems, retrieving the T-Coffee alignment output from each one. Here is a comparison of each of them:
+
+T-Coffee ran with same data on 4 different systems without Docker:
+```bash
+$ diff -s --from-file=cloud_original.clustalw jianwei_original.clustalw rudy_original.clustalw jun_original.clustalw
+```
+```
+Files cloud_original.clustalw and jianwei_original.clustalw are identical
+Files cloud_original.clustalw and rudy_original.clustalw are identical
+Files cloud_original.clustalw and jun_original.clustalw are identical
+```
+
+T-Coffee ran with the same data on 2 systems with Docker:
+```bash
+$ diff -s --from-file cloud_original.clustalw cloud_docker.clustalw jun_docker.clustalw
+```
+```
+Files cloud_original.clustalw and cloud_docker.clustalw are identical
+Files cloud_original.clustalw and jun_docker.clustalw are identical
+```
+
+The first thing you will notice is that T-Coffee did not need Docker as it was not sensitive to the runtime environment. This does not mean that you should not bother with Docker as it could save you from any surprises in the future if the workflow were to be rerun in a environment that causes it to fail. The other thing to take away from this comparison is that T-Coffee has numerous parameters and having everyone use all of the exact same ones would have been much more difficult without the shared workflow between the instances. T-Coffee was found to have a quirk when running it manually, if you pass the default output format explicitly then it changes the header in the output to a different layout. This is likely caused by incorrect documentation of what the default actually was but represents how easy it is to produce a different output even if you described to someone the parameters you used.
+Gold standard data reproducibility can be very difficult, there are many variables in a computer system and you should use tools to minimise these variables. Galaxy and Docker are highly effective in this regard but you should also be conscious of any additional steps you might need to take to ensure that others can reproduce your data easily.
+
+
+## Author Contributions
+
+Special thanks to:
+
+* Nolan for project planning, preliminary research, working out how to setup and manage a Galaxy instance on AWS, sourcing test data, and the T-Coffee analysis.
+* Jianwei for T-Coffee analysis, Planemo research and setup, ToolShed management, user created tool integration, validation and submitting to ToolShed.
+* Rudy for research and T-Coffee analysis.
+* Zhengjun for T-Coffee analysis and Docker setup
+
+And everyone for documenting their respective components of this tutorial.
+
