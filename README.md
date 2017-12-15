@@ -11,7 +11,7 @@ If you have any experience in the data sciences then you will know the tribulati
 # Workflow Managers
 
 Let's begin with the idea of a workflow. A workflow is a series of tools and dataset actions that run in sequence to transform data into a useful form. It usually involves data conversion, filtration, transformation, aggregation, segmentation, processing, and visualisation. They can include a mixture of custom scripts, 3rd party software, and manual curation. A workflow manager is a piece of software that keeps track of and executes each step. The two most critical pieces of information that a workflow manager should keep track of is the software version of the tools and the input parameters.
-Here is a non-comprehensive list of workflow managers available from ![wikipedia](https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system):
+Here is a non-comprehensive list of workflow managers available from [wikipedia](https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system):
   * Galaxy: Web based graphical workflow manager
   * GenePattern: Web based workflow manager
   * BioBIKE: Web-based, programmable, integrated biological knowledge base.
