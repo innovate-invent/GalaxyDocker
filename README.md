@@ -179,7 +179,7 @@ One kwirk about Galaxy is that many of its important menu functions are unlabell
 Now that you have your workflow setup you can test everything by running it. Your workflow is now listed under the “Workflow” menu option. Click the button for the workflow you created and select “Run”.
 
 <a href="images/galaxy_get_data.png"><img src="images/galaxy_get_data.png" class="screenshot" /></a>
-Now is a good time to upload some test data. We have prepared a small dataset that will align well, you can download it here. It is 20 HIV genomes taken from the HIV Sequence Database hosted by Los Alamos National Laboratories.
+Now is a good time to upload some test data. We have prepared a small dataset that will align well, you can download it [here](data/hiv-db.fasta). It is 20 HIV genomes taken from the [HIV Sequence Database hosted by Los Alamos National Laboratories](https://www.hiv.lanl.gov/).
 Click “Upload File” under the “Get Data” category on the left.
 
 <a href="images/upload_data.png"><img src="images/upload_data.png" class="screenshot" /></a>
@@ -193,3 +193,124 @@ Pay attention to the history on the right, it keeps track of everything you did 
 The workflow task will appear in the History on the right as a greyed out box. Wait until it turns green signifying that the computation is complete. You can then click on the task to expand its options, this provides a download icon that allows you to download the resulting alignment file. Back in the “Workflow” section you also have the option to download the workflow that you created so that you can send it to others and they can import it into their Galaxy instances.
 The best way to familiarise yourself with Galaxy is to play with its many tools and functions. The developers put in significant effort to ensure that someone can’t do any harm to the system from Galaxy, so you don’t have to worry when experimenting with the various features.
 
+# Runtime Environment Management
+
+Great, we have demonstrated that Galaxy can help ensure reproducibility of a workflow, but that is only half of the problem. Many tools available are affected by external factors within the system. Environment variables, runtime libraries, system configuration, filesystems, and external utilities to name some. The version, presence and state of these factors need to be managed. There are three leading solutions that address this, each with successively greater isolation from the host system. Anaconda is the least isolating and operates within the host environment. It manages software versioning and environment variables. It has a built-in package manager that allows easy installation of a rich library of utilities and applications. It is often paired with the next two solutions. VirtualBox is on the other end of the isolation spectrum. It provides a fully virtualized machine environment that is completely independent of the host system. The virtual machine runs its own operating system and installations and configurations of software. Although this seems like the ideal you would want, it comes at the cost of significant resource overhead and is also cumbersome to share the VM images. A reasonable compromise is Docker. It utilises linux containers to provide a level of isolation from the host system. You can *almost* think of it as a lightweight virtual machine but it has some critical differences from one. Each Docker container is provided with its own file system, network interfaces, and isolates the running processes on the system. For a more detailed comparison between Docker and a virtual machine see [here](https://stackoverflow.com/questions/16047306/how-is-docker-different-from-a-normal-virtual-machine).
+Docker is also very useful because it makes sharing images easier as they are significantly more lightweight.
+
+# Change a Galaxy tool to use Docker
+
+Let's look at adapting an existing tool in Galaxy to be packaged inside a Docker instance. We will run T-Coffee from Galaxy within a Docker container. Rather than going through the trouble of creating your own docker image, you should have a look on DockerHub for an existing image. It is very likely that someone else has already gone through the trouble. If you find that you need to build a custom Docker image then [here](https://deis.com/blog/2015/creating-sharing-first-docker-image/) is a quick runthrough of how. 
+To begin, open [DockerHub](https://hub.docker.com/) in a browser.
+
+<a href="images/dockerhub.png"><img src="images/dockerhub.png" class="screenshot" /></a>
+Search for ‘tcoffee’ with the search box at the top.
+
+<a href="images/dockerhub_tcoffee.png"><img src="images/dockerhub_tcoffee.png" class="screenshot" /></a>
+A list of results will be returned, we chose to use “cbcrg/tcoffee” for this tutorial. You only need the image name but you can click on the option for details.
+
+Next you now need to connect to the Galaxy instance you previously created using SSH. For Windows you can use a SSH client like [PUTTY](http://www.putty.org/) or on linux and mac you can type ‘ssh [ip address of server]’ in the console. Replace ‘[ip address of server]’ with the IP address recorded in the previous section. It will prompt for a username and password, use the username ‘ubuntu’ and the password you specified when launching the instance.
+
+There are 4 key files for this section:
+ * tcoffee.xml - an xml file that describes tcoffee to galaxy
+	* tcoffee.pl - a script that reformats the different options selected in galaxy tool GUI to be compatable with the T-Coffee executable
+	* job_conf.xml	- an xml file that specifies how galaxy runs tools
+	* tool_conf.xml	- an xml file that organizes the “Tools” section of the galaxy GUI (not including tools that installed from the tool shed)
+
+Since you have installed T-Coffee from the tool shed, you can obtain the first two files with:
+   $ sudo cp -r /mnt/galaxy/shed_tools/toolshed.g2.bx.psu.edu/repos/ayllon/tcoffee/e65eb41717b4/tcoffee ~/galaxy-app/tools/
+
+The folder “tcoffee” contains tcoffee.xml and tcoffee.pl and the command will copy it to ~/galaxy-app/tools/, which is the directory Galaxy stores tools that are not from the ToolShed.
+
+Modify the tool xml file by entering the following into the command prompt:
+   $ sudo nano ~/galaxy-app/tools/tcoffee/tcoffee.xml
+
+Modify the “requirements” section of tcoffee.xml to tell Galaxy to run the docker image of T-Coffee:
+
+Original:
+
+   <requirements>
+       <requirement type="package" version=”10.00.r1613”>T-COFFEE</requirement>
+   </requirements>
+
+Modified:
+
+   <requirements>
+       <container type="docker">cbcrg/tcoffee</container>
+   </requirements>
+
+To save this change press Ctrl-x then ‘y’ then enter.
+
+No changes are needed for tcoffee.pl.
+
+Modify the tool_conf.xml by entering the following into the command prompt:
+   $ sudo nano ~/galaxy-app/config/job_conf.xml
+
+Add the 3 lines below to job_conf.xml:
+    <destination id="docker_slurm" runner="slurm">
+            <param id="docker_enabled">true</param>
+    </destination>
+
+These three lines enable Docker as a destination and set slurm as a runner.
+Slurm is a job scheduler that distributes the work over the cluster.
+
+Original job_conf.xml:
+    <destinations default="slurm_cluster">
+            <destination id="slurm_cluster" runner="slurm"/>
+            <destination id="slurm_cluster_cpu4" runner="slurm">
+                <param id="nativeSpecification">--nodes=1 --ntasks=4</param>
+            </destination>
+            <destination id="pulsar_server" runner="pulsar_rest">
+                <param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
+            </destination>
+            <destination id="local_runner" runner="local"/>
+    </destinations>
+
+Modified job_conf.xml:
+    <destinations default="slurm_cluster">
+            <destination id="slurm_cluster" runner="slurm"/>
+            <destination id="slurm_cluster_cpu4" runner="slurm">
+                <param id="nativeSpecification">--nodes=1 --ntasks=4</param>
+            </destination>
+            <destination id="pulsar_server" runner="pulsar_rest">
+                <param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
+            </destination>
+            <destination id="local_runner" runner="local"/>
+            <destination id="docker_slurm" runner="slurm">
+                <param id="docker_enabled">true</param>
+            </destination>
+      </destinations>
+
+To save this change press Ctrl-x then ‘y’ then enter.
+
+Modify the tool_conf.xml by entering the following into the command prompt:
+    $ sudo nano ~/galaxy-app/config/tool_conf.xml
+
+Add the 3 lines below to tool_conf.xml, simply add it at the end of the page before ‘</toolbox>’:
+    <section id="docker" name="Docker tools">
+        <tool file="tcoffee/tcoffee.xml" />
+    </section>
+
+These lines adds a section called “Docker tools” in the tool section of the galaxy GUI. It also tells galaxy the location of the tool xml.
+
+Original tool_conf.xml:
+    <section id="plots" name="Graph/Display Data">
+       <tool file="plotting/bar_chart.xml" />
+       <tool file="plotting/boxplot.xml" />
+       <tool file="maf/vcf_to_maf_customtrack.xml" />
+    </section>
+
+Modified tool_conf.xml:
+    <section id="plots" name="Graph/Display Data">
+       <tool file="plotting/bar_chart.xml" />
+       <tool file="plotting/boxplot.xml" />
+       <tool file="maf/vcf_to_maf_customtrack.xml" />
+    </section>
+    <section id="docker" name="Docker tools">
+       <tool file="tcoffee/tcoffee.xml" />
+    </section>
+
+To save this change press Ctrl-x then ‘y’ then enter.
+
+Now, just refresh the galaxy webpage and there should be a new section “Docker tools” in the tool box.
+There you go, you can now run T-Coffee inside a Docker instance with Galaxy.
