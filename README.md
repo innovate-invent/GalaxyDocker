@@ -231,13 +231,13 @@ $ sudo nano ~/galaxy-app/tools/tcoffee/tcoffee.xml
 
 Modify the “requirements” section of tcoffee.xml to tell Galaxy to run the docker image of T-Coffee:
 
-Original:
+Original tcoffee.xml:
 ```xml
 <requirements>
 	<requirement type="package" version=”10.00.r1613”>T-COFFEE</requirement>
 </requirements>
 ```
-Modified:
+Modified tcoffee.xml:
 ```xml
 <requirements>
 	<container type="docker">cbcrg/tcoffee</container>
@@ -304,7 +304,7 @@ Add the 3 lines below to tool_conf.xml, simply add it at the end of the page bef
 </section>
 ```
 
-These lines adds a section called “Docker tools” in the tool section of the galaxy GUI. It also tells galaxy the location of the tool xml.
+These lines add a section called “Docker tools” in the tool section of the galaxy GUI. It also tells galaxy the location of the tool xml.
 
 Original tool_conf.xml:
 ```xml
@@ -389,7 +389,7 @@ if __name__=="__main__": __main__()
 ```
 
 
-Noted we know that a Galaxy tool file is just an XML file, so now we could simply open an XML file editor and start writing the tool. Since we installed the Planemo, which has commands to quickly generate some of the boilerplate XML, so let’s start by doing that using the following command:
+Noted we know that a Galaxy tool wrapper file is just an XML file, so now we could simply open an XML file editor and start writing the tool. Since we installed the Planemo, which has commands to quickly generate some of the boilerplate XML, so let’s start by doing that using the following command:
 ```bash
 $ planemo tool_init --id 'helloW' --name 'Print Hello World'
 ```
@@ -421,11 +421,12 @@ The command line will create the file helloW.xml, whose contents are like the fo
 
 The tool_init command have a few other options except the --id and --name. We can define the example command with the --example_command option and the example input (output) with the --example_input (--example_output) option.These options can generate a command block by specifying the inputs and the outputs as follows. As we mentioned above, since we have created the tool xml file, we can just edit it instead of using the commands. 
 
-We will generate the xml file, after which has correct definitions for the input and output as well as an actual command template. We can add the description section as a brief introduction of our tool and fill the help section with any additional information we’d like the tool users to view. After the above generations, the xml file will like the following.
+We will generate the xml file, after which has correct definitions for the input and output as well as an actual command template. We can add the description section as a brief introduction of our tool and fill the help section with any additional information we’d like the tool users to view. We also modify the requirements section. In this way, galaxy will run python inside a Docker image called “avnergoncalves/ubuntu-python3.5”. After the above generations, the xml file will like the following.
 
 ```xml
 <tool id="helloW" name="Print Hello World" version="0.1.0">
     <requirements>
+	<container type="docker">avnergoncalves/ubuntu-python3.5</container>
     </requirements>
     <stdio>
         <exit_code range="1:" />
