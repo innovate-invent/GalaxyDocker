@@ -334,8 +334,201 @@ Now, just refresh the galaxy webpage and there should be a new section “Docker
 There you go, you can now run T-Coffee inside a Docker instance with Galaxy.
 
 ## Add a custom script as a tool in Galaxy
+Modifying existing tools was a good introduction to the inner workings of how Galaxy tools work but it is more likely that you will want to wrap your own custom script or program and have Galaxy run it in a Docker image. Let's now take a simple Python script and pair it with an existing Docker image with the Python interpreter prepackaged.
 
-## Validate that the tool meets ToolShed standards with Planemo
+The tool wrapper is written in XML following the [Galaxy tool schema](https://docs.galaxyproject.org/en/master/dev/schema.html). We need to make sure our own defined tools meet the requirements of the tool schema, otherwise during the validating step the errors will be identified and further modifications will be needed.
+
+We will create a python script that takes a number and appends it after "Hello world!" then prints them with an option to print the author name or not. A -v command line argument to output a version number is also needed. A galaxy tool wrapper xml file needs to be created to support it, and this corresponding xml file needs to be validated before submitting.
+
+We need to use the planemo tool validator to make sure the tool works and the wrapper needs to support the parallelisation options.
+
+### Planemo
+We use Planemo for both tool development (see tutorial) and publishing to the Tool Shed. Planemo is a command-line utilities to assist in building and publishing Galaxy tools. Planemo documentation is available [here](https://planemo.readthedocs.io/), and the source codes are available on [github](https://github.com/galaxyproject/planemo).
+
+For a traditional Python installation of Planemo, first set up a virtualenv for Planemo (this example creates a new one in .vene) and then install with pip (Planemo requires pip 7.0 or newer). We can install Planemo using the following commands:
+```bash
+$ virtualenv .venv; . .venv/bin/activate
+$ pip install "pip>=7" 		# Upgrade pip if needed.
+$ pip install planemo
+```
+Another approach for installing Planemo is to use Homebrew or linuxbrew (this is what we use). To install Planemo this way use the brew command as follows.
+```bash
+$ brew tap galaxyproject/tap
+$ brew install planemo
+```
+Noted Planemo is a set of utilities for developing Galaxy tools, each utility is implemented as a subcommand of the planemo executable. The [command documentation](http://planemo.readthedocs.io/en/latest/commands.html) describes these commands. We will use some of them in the following sections when developing, validating and submitting our own defined tool.
+
+### Validate that the tool meets ToolShed standards with Planemo
+We have a “helloW.py” python script which needs to be wrapped into an xml file. 
+```python
+import optparse, sys
+
+def __main__():
+    if '-v' in sys.argv:
+        print("0.1.0")
+    else:
+        #Parse Command Line
+        parser = optparse.OptionParser()
+        (options, args) = parser.parse_args()
+    
+        assert len( args ) == 3, "Invalid command line specified."
+    
+        out_file = open( args[0], 'wb' )
+        writer = out_file.write
+        appendNum = args[1]
+        author = args[2]
+
+        writer("Hello World!")
+        writer(appendNum)
+        writer(author)
+        print appendNum
+        print author
+        out_file.close()
+
+if __name__=="__main__": __main__()
+```
+
+
+Noted we know that a Galaxy tool file is just an XML file, so now we could simply open an XML file editor and start writing the tool. Since we installed the Planemo, which has commands to quickly generate some of the boilerplate XML, so let’s start by doing that using the following command:
+```bash
+$ planemo tool_init --id 'helloW' --name 'Print Hello World'
+```
+
+The tool_init command can take various complex arguments, but the two most basic ones shown above are --id and --name. Every Galaxy tool needs an id (this is a short identifier used by Galaxy itself to identify the tool) and a name (this is displayed to the Galaxy user and should be a short description of the tool). A tool’s name can have whitespace but its id must not. After running this command, the created tool file will have the common sections required for a Galaxy tool but we will still need to open up the editor and fill out the command template, describe input parameters, tool outputs, write a help section, etc.
+
+The command line will create the file helloW.xml, whose contents are like the following:
+
+```xml
+<tool id="helloW" name="Print Hello World" version="0.1.0">
+    <requirements>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><! [CDATA[
+	TODO: Fill in command template
+    ]]></command>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+    <help><![CDATA[
+	TODO: Fill in help.
+    ]]></help>
+</tool>
+```
+
+The tool_init command have a few other options except the --id and --name. We can define the example command with the --example_command option and the example input (output) with the --example_input (--example_output) option.These options can generate a command block by specifying the inputs and the outputs as follows. As we mentioned above, since we have created the tool xml file, we can just edit it instead of using the commands. 
+
+We will generate the xml file, after which has correct definitions for the input and output as well as an actual command template. We can add the description section as a brief introduction of our tool and fill the help section with any additional information we’d like the tool users to view. After the above generations, the xml file will like the following.
+
+```xml
+<tool id="helloW" name="Print Hello World" version="0.1.0">
+    <requirements>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <description>and append the input number</description>
+    <command>python $__tool_directory__/helloW.py $out_file $appendNum $author
+        <version_command>python $__tool_directory__/helloW.py -v</version_command>
+    </command>
+    <inputs>
+        <param name="appendNum" size="50" type="integer" value="123" label="appending number"/>
+        <param name="author" type="select" display="radio" label="output author">
+            <option value="invisible author">No</option>
+            <option value="jianwei">Yes</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data format="txt" name="out_file"/>
+    </outputs>
+    <help><![CDATA[
+        This tool reads the user input number and append it behand "hello world!" then print.
+        The user also have the option to display the author name of this tool.
+        The -v option can be used to get the version of this tool.
+    ]]></help>
+</tool>
+```
+
+In the command block, we define two commands. The special value $__tool_directory__ here refers to the directory our tool lives in. Once we finish the galaxy tool, we can use our specified Galaxy instance or just simply using the Galaxy commands to call these two commands, which will have the equivalent output as when we use the python commands $ python helloW.py output 666 jianwei and $ python helloW.py -v, but the Galaxy didn’t directly access to the script, it calls the corresponding functions via the xml tool file with Galaxy commands.
+
+The test section is important when our tool is complicated, as for the hello world example, we could just simply define the following test case. Noted the test case data should be stored in the test_data folder in the same directory of the xml file. This test case just input the parameter appendNum=123 and author=jianwei, and compare the output file with out_file.txt, which is the correct output file.
+
+```xml
+<tests>
+	<test>
+	    <param name="appendNum" value="123"/>
+	    <param name="author" value="jianwei"/>
+	    <output name="out_file" file="out_file.txt"/>
+	</test>
+</tests>
+```
+
+The test section is trivial in the hello world example, but we should pay much attention to this section when developing a complicated tool such as t-coffee, since before the tool is submitted into tool shed, we need to guarantee it works.
+
+At this point we have a fairly functional Galaxy tool with test and help. This is a pretty simple example, usually we will need to put more work into the tool to get to this point - tool_init is really just designed to get us started. Now let’s lint and test the tool we have developed. The Planemo’s lint (or just l) command will review tool for XML validity and obvious mistakes. So far, our tool folder should include helloW.py, helloW.xml and the test data.
+
+Now we run the lint and test commands:
+```bash
+$ planemo lint or $ planemo l
+$ planemo test or $ planemo t
+```
+By default the lint and test commands will find all the tools in our current working directory, but we could have specified a particular tool with:
+```bash
+$ planemo lint helloW.xml
+$ planemo test helloW.xml
+```
+
+Noted in the current working directory, there’s only one tool (helloW.xml), so the two set of commands are equivalent. If we did everything correctly and the tool xml file complies with the Galaxy tool schema, the lint will throw no errors, and all the tests will be passed. 
+
+This tutorial is aiming to the basic user defined tool construction, so we just show the essential parts and options. There are much more parameter operations that can be defined to specify the command block and parameter block, such as conditional parameters, we can use the optional parameters and inputs to form different commands with one command block. In our hello world case, we only need to write a tool for a single relatively simple application or script, if we want to maintain a collection of related tools, experience suggests we will realize there is a lot of duplicated XML to do this well. Galaxy tool [XML macros](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#Reusing_Repeated_Configuration_Elements) can help reduce this duplication. For more additional unmentioned operations or technologies, you can see the [Planemo Documentation](https://planemo.readthedocs.io/).
+
+Up to now, we build a tool for the hello world script and place the script in the same directory as the tool XML file itself. Now we can open Galaxy with the serve command (or just s).
+```bash
+$ planemo serve
+...
+serving on http://127.0.0.1:9090
+
+Open up http://127.0.0.1:9090 in a web browser to view our new tool. Serve and test can be passed various command line arguments such as --galaxy_root to specify a Galaxy instance to use.
+```
+
+## Submit the tool to the ToolShed
+We have wrapped the origin functional python script into a Galaxy xml tool file, now we should submit it to the toolshed, from where the other users can access to it. The Galaxy Tool Shed can store Galaxy tools, dependency definitions, and workflows among other Galaxy artifacts.
+
+There are mainly three steps to submitting our hello world galaxy tool into the tool shed - configuring a shed account, creating a repository and updating the repository.
+
+First, we need to configure a shed account. Before getting started, we ought to have an account on the [Galaxy test Tool Sheds](https://testtoolshed.g2.bx.psu.edu/). Also, we need to initialize a global Planemo configuration file (~/.planemo.yml). This can be done with:
+```bash
+$ planemo config_init
+```
+This will populate a template ~/.planemo.yml file and provide locations to fill in shed credentials for the test Tool Sheds. For each shed, fill in either an API key or an email and password. Also specify the shed_username created when registering shed accounts. We can edit the .planemo.yml file in the root directory in our computer. For our case, the .planemo.yml should be edited as following. The email and password represent our shed account of Galaxy.
+
+```yaml
+## Planemo Global Configuration File.
+## Everything in this file is completely optional - these values can all be
+## configured via command line options for the corresponding commands.
+
+## Specify a default galaxy_root for test and server commands here.
+#galaxy_root: /Users/eric/galaxy
+## Username used with toolshed(s).
+#shed_username: "jianwei"
+sheds:
+  # For each tool shed you wish to target, uncomment key or both email and
+  # password.
+  toolshed:
+    #key: "<TODO>"
+    #email: "jianweil@sfu.ca"
+    #password: "123456789"
+  testtoolshed:
+    #key: "<TODO>"
+    #email: "jianweil@sfu.ca"
+    #password: "123456789"
+  local:
+    #key: "<TODO>"
+    #email: "jianweil@sfu.ca"
+    #password: "123456789"
+```
 
 ## Future Research
 
