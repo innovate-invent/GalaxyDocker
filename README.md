@@ -212,103 +212,121 @@ A list of results will be returned, we chose to use “cbcrg/tcoffee” for this
 Next you now need to connect to the Galaxy instance you previously created using SSH. For Windows you can use a SSH client like [PUTTY](http://www.putty.org/) or on linux and mac you can type ‘ssh [ip address of server]’ in the console. Replace ‘[ip address of server]’ with the IP address recorded in the previous section. It will prompt for a username and password, use the username ‘ubuntu’ and the password you specified when launching the instance.
 
 There are 4 key files for this section:
- * tcoffee.xml - an xml file that describes tcoffee to galaxy
-	* tcoffee.pl - a script that reformats the different options selected in galaxy tool GUI to be compatable with the T-Coffee executable
-	* job_conf.xml	- an xml file that specifies how galaxy runs tools
-	* tool_conf.xml	- an xml file that organizes the “Tools” section of the galaxy GUI (not including tools that installed from the tool shed)
+* tcoffee.xml - an xml file that describes tcoffee to galaxy
+* tcoffee.pl - a script that reformats the different options selected in galaxy tool GUI to be compatable with the T-Coffee executable
+* job_conf.xml - an xml file that specifies how galaxy runs tools
+* tool_conf.xml	- an xml file that organizes the “Tools” section of the galaxy GUI (not including tools that installed from the tool shed)
 
 Since you have installed T-Coffee from the tool shed, you can obtain the first two files with:
-   $ sudo cp -r /mnt/galaxy/shed_tools/toolshed.g2.bx.psu.edu/repos/ayllon/tcoffee/e65eb41717b4/tcoffee ~/galaxy-app/tools/
+```bash
+$ sudo cp -r /mnt/galaxy/shed_tools/toolshed.g2.bx.psu.edu/repos/ayllon/tcoffee/e65eb41717b4/tcoffee ~/galaxy-app/tools/
+```
 
 The folder “tcoffee” contains tcoffee.xml and tcoffee.pl and the command will copy it to ~/galaxy-app/tools/, which is the directory Galaxy stores tools that are not from the ToolShed.
 
 Modify the tool xml file by entering the following into the command prompt:
-   $ sudo nano ~/galaxy-app/tools/tcoffee/tcoffee.xml
+```bash
+$ sudo nano ~/galaxy-app/tools/tcoffee/tcoffee.xml
+```
 
 Modify the “requirements” section of tcoffee.xml to tell Galaxy to run the docker image of T-Coffee:
 
 Original:
-
-   <requirements>
-       <requirement type="package" version=”10.00.r1613”>T-COFFEE</requirement>
-   </requirements>
-
+```xml
+<requirements>
+	<requirement type="package" version=”10.00.r1613”>T-COFFEE</requirement>
+</requirements>
+```
 Modified:
-
-   <requirements>
-       <container type="docker">cbcrg/tcoffee</container>
-   </requirements>
-
+```xml
+<requirements>
+	<container type="docker">cbcrg/tcoffee</container>
+</requirements>
+```
 To save this change press Ctrl-x then ‘y’ then enter.
 
 No changes are needed for tcoffee.pl.
 
 Modify the tool_conf.xml by entering the following into the command prompt:
-   $ sudo nano ~/galaxy-app/config/job_conf.xml
-
+```bash
+$ sudo nano ~/galaxy-app/config/job_conf.xml
+```
 Add the 3 lines below to job_conf.xml:
-    <destination id="docker_slurm" runner="slurm">
-            <param id="docker_enabled">true</param>
-    </destination>
+```xml
+<destination id="docker_slurm" runner="slurm">
+    <param id="docker_enabled">true</param>
+</destination>
+```
 
 These three lines enable Docker as a destination and set slurm as a runner.
 Slurm is a job scheduler that distributes the work over the cluster.
 
 Original job_conf.xml:
-    <destinations default="slurm_cluster">
-            <destination id="slurm_cluster" runner="slurm"/>
-            <destination id="slurm_cluster_cpu4" runner="slurm">
-                <param id="nativeSpecification">--nodes=1 --ntasks=4</param>
-            </destination>
-            <destination id="pulsar_server" runner="pulsar_rest">
-                <param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
-            </destination>
-            <destination id="local_runner" runner="local"/>
-    </destinations>
+```xml
+<destinations default="slurm_cluster">
+    <destination id="slurm_cluster" runner="slurm"/>
+    <destination id="slurm_cluster_cpu4" runner="slurm">
+	<param id="nativeSpecification">--nodes=1 --ntasks=4</param>
+    </destination>
+    <destination id="pulsar_server" runner="pulsar_rest">
+	<param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
+    </destination>
+    <destination id="local_runner" runner="local"/>
+</destinations>
+```
 
 Modified job_conf.xml:
-    <destinations default="slurm_cluster">
-            <destination id="slurm_cluster" runner="slurm"/>
-            <destination id="slurm_cluster_cpu4" runner="slurm">
-                <param id="nativeSpecification">--nodes=1 --ntasks=4</param>
-            </destination>
-            <destination id="pulsar_server" runner="pulsar_rest">
-                <param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
-            </destination>
-            <destination id="local_runner" runner="local"/>
-            <destination id="docker_slurm" runner="slurm">
-                <param id="docker_enabled">true</param>
-            </destination>
-      </destinations>
+```xml
+<destinations default="slurm_cluster">
+    <destination id="slurm_cluster" runner="slurm"/>
+    <destination id="slurm_cluster_cpu4" runner="slurm">
+	<param id="nativeSpecification">--nodes=1 --ntasks=4</param>
+    </destination>
+    <destination id="pulsar_server" runner="pulsar_rest">
+	<param id="url">http://pulsar_server_ip:pulsar_server_port/</param>
+    </destination>
+    <destination id="local_runner" runner="local"/>
+    <destination id="docker_slurm" runner="slurm">
+	<param id="docker_enabled">true</param>
+    </destination>
+</destinations>
+```
 
 To save this change press Ctrl-x then ‘y’ then enter.
 
 Modify the tool_conf.xml by entering the following into the command prompt:
-    $ sudo nano ~/galaxy-app/config/tool_conf.xml
+```bash
+$ sudo nano ~/galaxy-app/config/tool_conf.xml
+```
 
 Add the 3 lines below to tool_conf.xml, simply add it at the end of the page before ‘</toolbox>’:
-    <section id="docker" name="Docker tools">
-        <tool file="tcoffee/tcoffee.xml" />
-    </section>
+```xml
+<section id="docker" name="Docker tools">
+	<tool file="tcoffee/tcoffee.xml" />
+</section>
+```
 
 These lines adds a section called “Docker tools” in the tool section of the galaxy GUI. It also tells galaxy the location of the tool xml.
 
 Original tool_conf.xml:
-    <section id="plots" name="Graph/Display Data">
+```xml
+<section id="plots" name="Graph/Display Data">
        <tool file="plotting/bar_chart.xml" />
        <tool file="plotting/boxplot.xml" />
-       <tool file="maf/vcf_to_maf_customtrack.xml" />
-    </section>
-
+	<tool file="maf/vcf_to_maf_customtrack.xml" />
+</section>
+```
 Modified tool_conf.xml:
-    <section id="plots" name="Graph/Display Data">
-       <tool file="plotting/bar_chart.xml" />
-       <tool file="plotting/boxplot.xml" />
-       <tool file="maf/vcf_to_maf_customtrack.xml" />
-    </section>
-    <section id="docker" name="Docker tools">
-       <tool file="tcoffee/tcoffee.xml" />
-    </section>
+```xml
+<section id="plots" name="Graph/Display Data">
+	<tool file="plotting/bar_chart.xml" />
+	<tool file="plotting/boxplot.xml" />
+	<tool file="maf/vcf_to_maf_customtrack.xml" />
+</section>
+<section id="docker" name="Docker tools">
+	<tool file="tcoffee/tcoffee.xml" />
+</section>
+```
 
 To save this change press Ctrl-x then ‘y’ then enter.
 
