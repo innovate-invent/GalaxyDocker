@@ -35,7 +35,7 @@ The best way to learn is by doing, so let's get you started with your own Galaxy
 # Amazon Web Services
 
 <a href="images/AWS/AWS1.jpg"><img src="images/AWS/AWS1.jpg" class="screenshot" /></a>
-To sign up for AWS, first open the Amazon web services website here and click on “Complete Sign Up”.
+To sign up for AWS, first open the Amazon web services website [here](https://aws.amazon.com/) and click on “Complete Sign Up”.
 
 <a href="images/AWS/AWS2.jpg"><img src="images/AWS/AWS2.jpg" class="screenshot" /></a>
 Click on “Create a new AWS account”. If you already have an AWS account, skip to 11.
