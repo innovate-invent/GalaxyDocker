@@ -139,4 +139,57 @@ Take note of the two green circles on the “Service Status” line. You need to
 <a href="images/cloudman_admin.png"><img src="images/cloudman_admin.png" class="screenshot" /></a>
 In order to download tools from the tool shed, you need to become an admin user of the galaxy instance.
 To do so, click on the “Admin” section on the top right corner of the page and type your email address in the box highlighted. Once entered click the “Set admin users” button.
-Once that is done, click on the CloudMan icon in the top left corner of the page to return to the main page. Wait again for the circles to be green on the “Service Status” line. When they are, click the “Access Galaxy” button.
+Once that is done, click on the CloudMan icon in the top left corner of the page to return to the main page. Wait again for the circles to be green on the “Service Status” line. When they are green, click the “Access Galaxy” button.
+
+# Install a Galaxy tool from the ToolShed
+
+<a href="images/galaxy_register.png"><img src="images/galaxy_register.png" class="screenshot" /></a>
+The first thing you need to do is register yourself using the email address you entered into the CloudMan admin page. Click “Login or Register” and fill out the form.
+
+<a href="images/galaxy_toolshed.png"><img src="images/galaxy_toolshed.png" class="screenshot" /></a>
+If everything went well and you used the same email as entered in the previous section then you should be provided with a “Admin” menu option on the top bar. Click on it, then click on “Search Tool Shed” under “Tools and Tool Shed” on the sidebar on the left. Select “Galaxy Main Tool Shed” in the options presented. If it prompts, select “Browse valid repositories”.
+
+<a href="images/galaxy_toolshed_search.png"><img src="images/galaxy_toolshed_search.png" class="screenshot" /></a>
+In the search box provided search for ‘coffee’. This will provide a list of matching tools from the main Galaxy tool repository. For this tutorial we will use the one owned by ‘ayllon’. Click the corresponding button and click “Preview and install”.
+
+<a href="images/galaxy_tcoffee_install.png"><img src="images/galaxy_tcoffee_install.png" class="screenshot" /></a>
+Click the “Install to Galaxy” button at the top.
+
+<a href="images/galaxy_tcoffee_install2.png"><img src="images/galaxy_tcoffee_install2.png" class="screenshot" /></a>
+It gives you the option to specify the category that the tools is listed on the left toolbar when doing analysis or building a workflow. You can specify a new one or select an existing one. Select “Multiple Alignments” from the drop down box and click “Install”.
+
+<a href="images/galaxy_tcoffee_installed.png"><img src="images/galaxy_tcoffee_installed.png" class="screenshot" /></a>
+When the installation is complete you should see the green “Installed” status on the right.
+
+<a href="images/galaxy_new_workflow.png"><img src="images/galaxy_new_workflow.png" class="screenshot" /></a>
+Next we will test the tool in a workflow. Click the Workflow option on the top toolbar and click the “Create new workflow” button that is shown. 
+
+<a href="images/galaxy_name_workflow.png"><img src="images/galaxy_name_workflow.png" class="screenshot" /></a>
+Enter a descriptive name and possibly a longer description in the respective fields and click “Create”.
+
+<a href="images/galaxy_inputdata.png"><img src="images/galaxy_inputdata.png" class="screenshot" /></a>
+In the workflow editor, select the “Inputs” category on the left and add a “Input dataset” placeholder to the workflow.
+
+<a href="images/galaxy_tcoffee_workflow.png"><img src="images/galaxy_tcoffee_workflow.png" class="screenshot" /></a>
+Then use the search box at the top of the toolbox to search for ‘coffee’, this will reduce the list to any matches. Add the T-Coffee aligner tool the same way you did the Input dataset placeholder. Now drag the small arrow to the right of ‘output’ on the Input dataset placeholder. This will create a line you can then drag to the input arrow on the left of ‘Source File’ for the T-Coffee placeholder.
+Click the T-Coffee placeholder box so that the T-Coffee options appear on the right. Check ‘kalign_msa’ and ‘Yes’ under the clustalw_aln output option.
+One kwirk about Galaxy is that many of its important menu functions are unlabelled icons just below the top menu bar. If you are looking for a menu option it is best to start looking there. If you hover your mouse over the gear icon at the top it should pop up with a description. Click the gear icon and select “Save”. Click the gear icon again and select “Close”.
+
+<a href="images/galaxy_tcoffee_workflow_run.png"><img src="images/galaxy_tcoffee_workflow_run.png" class="screenshot" /></a>
+Now that you have your workflow setup you can test everything by running it. Your workflow is now listed under the “Workflow” menu option. Click the button for the workflow you created and select “Run”.
+
+<a href="images/galaxy_get_data.png"><img src="images/galaxy_get_data.png" class="screenshot" /></a>
+Now is a good time to upload some test data. We have prepared a small dataset that will align well, you can download it here. It is 20 HIV genomes taken from the HIV Sequence Database hosted by Los Alamos National Laboratories.
+Click “Upload File” under the “Get Data” category on the left.
+
+<a href="images/upload_data.png"><img src="images/upload_data.png" class="screenshot" /></a>
+This will present you with a upload box that you can then drag the test data file into or click “Choose local file” to select the file. Once selected click “Start”, wait for the upload to finish and then click “Close”.
+
+<a href="images/run_workflow.png"><img src="images/run_workflow.png" class="screenshot" /></a>
+If the input dataset dropdown doesn’t automatically switch to the uploaded file then refresh the page.
+Pay attention to the history on the right, it keeps track of everything you did and you can then later download it for your record. It also contains all the uploaded data and results from your analysis. With the correct data set selected in the “Input dataset” drop down click “Run workflow” at the top.
+
+<a href="images/run_workflow_result.png"><img src="images/run_workflow_result.png" class="screenshot" /></a>
+The workflow task will appear in the History on the right as a greyed out box. Wait until it turns green signifying that the computation is complete. You can then click on the task to expand its options, this provides a download icon that allows you to download the resulting alignment file. Back in the “Workflow” section you also have the option to download the workflow that you created so that you can send it to others and they can import it into their Galaxy instances.
+The best way to familiarise yourself with Galaxy is to play with its many tools and functions. The developers put in significant effort to ensure that someone can’t do any harm to the system from Galaxy, so you don’t have to worry when experimenting with the various features.
+
