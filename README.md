@@ -401,6 +401,7 @@ The command line will create the file helloW.xml, whose contents are like the fo
 ```xml
 <tool id="helloW" name="Print Hello World" version="0.1.0">
     <requirements>
+         <container type="docker">avnergoncalves/ubuntu-python3.5</container>
     </requirements>
     <stdio>
         <exit_code range="1:" />
@@ -430,9 +431,8 @@ We will generate the xml file, after which has correct definitions for the input
         <exit_code range="1:" />
     </stdio>
     <description>and append the input number</description>
-    <command>python $__tool_directory__/helloW.py $out_file $appendNum $author
-        <version_command>python $__tool_directory__/helloW.py -v</version_command>
-    </command>
+    <command>python $__tool_directory__/helloW.py $out_file $appendNum $author</command>
+    <version_command>python $__tool_directory__/helloW.py -v</version_command>
     <inputs>
         <param name="appendNum" size="50" type="integer" value="123" label="appending number"/>
         <param name="author" type="select" display="radio" label="output author">
@@ -529,13 +529,49 @@ sheds:
     #email: "jianweil@sfu.ca"
     #password: "123456789"
 ```
+Then we need to create a repository. Planemo can be used to publish “repositories” to the Tool Shed, a single GitHub repository or locally managed directory of tools may correspond to any number of Tool Shed repositories. Planemo maps files to Tool Shed repositories using a special file called .shed.yml.
 
+From a directory containing tools, a package definition. etc.. the shed_init command can be used to bootstrap a new .shed.yml file.
+```bash
+$ planemo shed_init --name=hellow_repository
+                  --owner=jianwei
+                  --description=Hello world repository
+                  [--remote_repository_url=<URL to .shed.yml on github>]
+                  [--homepage_url=<Homepage for tool.>]
+                  [--long_description=This is a repository which contains the hello world tool.]
+                  [--category=visualization]*
+```
+This command create the .shed.yml file in the current directory, using this command we define the repository name, the owner, a short description and which category it’s in. Though the above command lists the repository_url and homepage_url, in our case we don’t have them, so just ignore. But for a well developed practical tool, there should be a corresponding epository_url and a homepage_url. More information on .shed.yml can be found as part of the [best practice documentation](http://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/shed_yml.html). After reviewing .shed.yml, this configuration file and relevant shed artifact (hello world tool) can be quickly linted using the following command:
+```bash
+$ planemo shed_lint --tools
+```
+Once the details of .shed.yml are set, it is time to create the remote repository and upload the tool to it - the following command should run once which creates the repository based the metadata in .shed.yml.
+```bash
+$ planemo shed_create --shed_target testtoolshed
+```
+After this, we log into the [Galaxy test Tool Sheds](https://testtoolshed.g2.bx.psu.edu/), then search our newly created repository, we can find it there, now this repository is empty. 
 <a href="images/repository1.png"><img src="images/repository1.png" class="screenshot" /></a>
-
 <a href="images/repository2.png"><img src="images/repository2.png" class="screenshot" /></a>
+
+Finally, we need upload our actual artifact (the hello world tool) into the repository. We use the command:
+```bash
+$ planemo shed_upload --shed_target testtoolshed
+```
+We need to ensure the Galaxy Test Tool Shed is enabled in Galaxy’s config/tool_sheds_conf.xml file and install and test the new repository. Up till now, we’ve done everything we need. After we install the hello world tool from the repository and open it in Galaxy, it should be like following, the tool is available now!
 
 <a href="images/helloworldtool.png"><img src="images/helloworldtool.png" class="screenshot" /></a>
 
+The following part is not necessary in the hello world example, but they are useful for the real practical tools. There are many more commands related to the repository updating, such as after we upload the hello world tool into the repository, if modifications are required, these can be reviewed using the shed_diff command. The --check_diff option here ensure there are significant differences before uploading new contents to the tool shed.
+
+Once tools and required dependency files have been published to the tool shed, the actual shed dependencies can be automatically installed and tool tests ran using the corresponding commands.
+```bash
+$ planemo shed_test --shed_target testtoolshed
+```
+Once our tool are ready for publication to the main Tool Shed, the following commands to create a repository there and populate it with your repository contents.
+```bash
+$ planemo shed_create
+```
+For more information of all the Planemo commands, see [here](http://planemo.readthedocs.io/en/latest/commands.html).
 
 ## Future Research
 
