@@ -245,8 +245,6 @@ Modified:
 ```
 To save this change press Ctrl-x then ‘y’ then enter.
 
-No changes are needed for tcoffee.pl.
-
 Modify the tool_conf.xml by entering the following into the command prompt:
 ```bash
 $ sudo nano ~/galaxy-app/config/job_conf.xml
@@ -329,6 +327,8 @@ Modified tool_conf.xml:
 ```
 
 To save this change press Ctrl-x then ‘y’ then enter.
+
+No changes are needed for tcoffee.pl.
 
 Now, just refresh the galaxy webpage and there should be a new section “Docker tools” in the tool box.
 There you go, you can now run T-Coffee inside a Docker instance with Galaxy.
