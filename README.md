@@ -105,3 +105,38 @@ Click on “Download .csv file” to save the access key ID and secret access ke
 
 In case you need more information about access keys, click [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
 
+# Cloudman
+
+Once you have an account with AWS and an access key ready, you can begin with launching an instance of Galaxy on their systems. One of Galaxy’s many features is the accompanying CloudMan project that removes all the guesswork of installing and configuring a complete instance. It is a relatively painless process, even for someone with zero experience with Galaxy or AWS.
+To begin, open the cloudman launcher [here](https://beta.launch.usegalaxy.org/).
+
+<a href="images/cloudman.png"><img src="images/cloudman.png" class="screenshot" /></a>
+CloudMan manages your past and running Galaxy instances and so it needs a means of identifying you. Click the “Login” menu option in the top right.
+
+<a href="images/cloudman_login.png"><img src="images/cloudman_login.png" class="screenshot" /></a>
+It will identify you through an account you have with one of the listed services. Click the preferred service you would like to use.
+
+<a href="images/cloudman_catalog.png"><img src="images/cloudman_catalog.png" class="screenshot" /></a>
+Once you have logged in, scroll down the catalog list and select the Galaxy CloudMan appliance.
+
+<a href="images/cloudman_launch.png"><img src="images/cloudman_launch.png" class="screenshot" /></a>
+This will prompt you for the access key you generated in the previous section. You will have to open the file with a text editor and copy out the access key ID and secret key as the format expected by the “Load credentials from file” option is not compatible with the file given to you by Amazon. For the purpose of this tutorial you should also have ‘Amazon US East 1 - N. Virginia’ selected. Some Amazon Clouds are not currently supported by CloudMan. Once you have entered the information, click the “Test and use these credentials” button. You also have the option to click the “Save to Profile“ button to save the credentials for future use. When ready click “Next”.
+
+<a href="images/cloudman_launch2.png"><img src="images/cloudman_launch2.png" class="screenshot" /></a>
+The next prompt asks you the specifics of the computer you want to run your root node on.
+One important gotcha that we ran into when producing this tutorial is that Galaxy requires a significant amount of RAM and disk space. 50Gb is a safe number to allocate leaving lots of room for uploading your data. It is also important that you select “m4.xlarge” for the hardware as the Galaxy installation process requires a large amount of RAM and will fail if not allocated enough. This means you can’t use the lower free tiers that AWS offers for your primary node. It is important that you remember the password you enter here as you will use it throughout this tutorial. Once you are ready, click “Next”.
+
+<a href="images/cloudman_launched.png"><img src="images/cloudman_launched.png" class="screenshot" /></a>
+This will access AWS and automatically install and configure Galaxy.
+It is also important to take note of the IP address here as it will be used later in this tutorial. In the image it is ‘34.201.1.85’ but will be different for your instance. Once you have recorded the address, wait for the status to say ‘Running’ and click the link to open the CloudMan manager page for your running instance.
+
+<a href="images/cloud_login.png"><img src="images/cloud_login.png" class="screenshot" /></a>
+It will ask you to authenticate, use ‘ubuntu’ as the username and the password you specified when creating the instance.
+
+<a href="images/cloudman_init.png"><img src="images/cloudman_init.png" class="screenshot" /></a>
+Take note of the two green circles on the “Service Status” line. You need to wait for both to be green before you can continue. Once they are green, close the message box at the top. This page allows you to manage the cluster that was configured for you by CloudMan. While not necessary for this tutorial, you can increase the number of worker nodes allocated or turn on auto scaling which will grow and shrink the cluster as needed. Be careful with that feature though as it could cause you to receive a very large bill from AWS if it allocated a large number of nodes for a job.
+
+<a href="images/cloudman_admin.png"><img src="images/cloudman_admin.png" class="screenshot" /></a>
+In order to download tools from the tool shed, you need to become an admin user of the galaxy instance.
+To do so, click on the “Admin” section on the top right corner of the page and type your email address in the box highlighted. Once entered click the “Set admin users” button.
+Once that is done, click on the CloudMan icon in the top left corner of the page to return to the main page. Wait again for the circles to be green on the “Service Status” line. When they are, click the “Access Galaxy” button.
