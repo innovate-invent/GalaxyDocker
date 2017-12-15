@@ -209,7 +209,7 @@ Search for ‘tcoffee’ with the search box at the top.
 <a href="images/dockerhub_tcoffee.png"><img src="images/dockerhub_tcoffee.png" class="screenshot" /></a>
 A list of results will be returned, we chose to use “cbcrg/tcoffee” for this tutorial. You only need the image name but you can click on the option for details.
 
-Next you now need to connect to the Galaxy instance you previously created using SSH. For Windows you can use a SSH client like [PUTTY](http://www.putty.org/) or on linux and mac you can type ‘ssh [ip address of server]’ in the console. Replace ‘[ip address of server]’ with the IP address recorded in the previous section. It will prompt for a username and password, use the username ‘ubuntu’ and the password you specified when launching the instance.
+Next you now need to connect to the Galaxy instance you previously created using SSH. For Windows you can use a SSH client like [PUTTY](http://www.putty.org/) or on linux and mac you can type ‘ssh ubuntu@[ip address of server]’ in the console. Replace ‘[ip address of server]’ with the IP address recorded in the previous section. It will prompt for a username and password, use the username ‘ubuntu’ and the password you specified when launching the instance.
 
 There are 4 key files for this section:
 * tcoffee.xml - an xml file that describes tcoffee to galaxy
