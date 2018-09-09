@@ -35,73 +35,73 @@ The best way to learn is by doing, so let's get you started with your own Galaxy
 ## Amazon Web Services
 
 <a href="images/AWS/AWS1.jpg"><img src="images/AWS/AWS1.jpg" class="screenshot" /></a>
-To sign up for AWS, first open the Amazon web services website [here](https://aws.amazon.com/) and click on “Complete Sign Up”.
+1. To sign up for AWS, first open the Amazon web services website [here](https://aws.amazon.com/) and click on “Complete Sign Up”.
 
 <a href="images/AWS/AWS2.jpg"><img src="images/AWS/AWS2.jpg" class="screenshot" /></a>
-Click on “Create a new AWS account”. If you already have an AWS account, skip to 11.
+2. Click on “Create a new AWS account”. If you already have an AWS account, skip to 11.
 
 <a href="images/AWS/AWS3.jpg"><img src="images/AWS/AWS3.jpg" class="screenshot" /></a>
-Enter your email address, password, and a AWS account name. Then, click on “Continue”.
+3. Enter your email address, password, and a AWS account name. Then, click on “Continue”.
 
 <a href="images/AWS/AWS4.jpg"><img src="images/AWS/AWS4.jpg" class="screenshot" /></a>
-A page will then show up to choose the account type you want to create. Select “Professional” if you want it for a company, an educational institution, or organisation, otherwise select “Personal”. Then, fill in your information and click on “Create Account and Continue”.
+4. A page will then show up to choose the account type you want to create. Select “Professional” if you want it for a company, an educational institution, or organisation, otherwise select “Personal”. Then, fill in your information and click on “Create Account and Continue”.
 
 <a href="images/AWS/AWS5.jpg"><img src="images/AWS/AWS5.jpg" class="screenshot" /></a>
-Now, enter your payment information and click on “Secure Submit”.
+5. Now, enter your payment information and click on “Secure Submit”.
 
 <a href="images/AWS/AWS6.jpg"><img src="images/AWS/AWS6.jpg" class="screenshot" /></a>
-Then, verify your phone number by clicking on “Call Me Now”.
+6. Then, verify your phone number by clicking on “Call Me Now”.
 
 <a href="images/AWS/AWS7.jpg"><img src="images/AWS/AWS7.jpg" class="screenshot" /></a>
-Wait for the call and enter the 4-digit code that is displayed and your identity should be verified.
+7. Wait for the call and enter the 4-digit code that is displayed and your identity should be verified.
 
 <a href="images/AWS/AWS8.jpg"><img src="images/AWS/AWS8.jpg" class="screenshot" /></a>
-Click on “Free” to select “Basic Plan”.
+8. Click on “Free” to select “Basic Plan”.
 
 <a href="images/AWS/AWS9.jpg"><img src="images/AWS/AWS9.jpg" class="screenshot" /></a>
-You can add more details to personalize your experience if you want to.
+9. You can add more details to personalize your experience if you want to.
 
 <a href="images/AWS/AWS10.jpg"><img src="images/AWS/AWS10.jpg" class="screenshot" /></a>
-Now, to create an access key, first click on “Sign In to the Console”.
+10. Now, to create an access key, first click on “Sign In to the Console”.
 
 <a href="images/AWS/AWS11.jpg"><img src="images/AWS/AWS11.jpg" class="screenshot" /></a>
-Sign in by using the account you just created.
+11. Sign in by using the account you just created.
 
 <a href="images/AWS/AWS12.jpg"><img src="images/AWS/AWS12.jpg" class="screenshot" /></a>
-Then, click on “My Security Credentials” under your account name.
+12. Then, click on “My Security Credentials” under your account name.
 
 <a href="images/AWS/AWS13.jpg"><img src="images/AWS/AWS13.jpg" class="screenshot" /></a>
-Click on “Continue to Security Credentials”.
+13. Click on “Continue to Security Credentials”.
 
 <a href="images/AWS/AWS14.jpg"><img src="images/AWS/AWS14.jpg" class="screenshot" /></a>
-Click on “Users” in the left sidebar.
+14. Click on “Users” in the left sidebar.
 
 <a href="images/AWS/AWS15.jpg"><img src="images/AWS/AWS15.jpg" class="screenshot" /></a>
-If there are no users, click on “Add user”. If there is a user, go to 20.
+15. If there are no users, click on “Add user”. If there is a user, go to 20.
 
 <a href="images/AWS/AWS16.jpg"><img src="images/AWS/AWS16.jpg" class="screenshot" /></a>
-Fill in the information and click on “Next: Permissions”.
+16. Fill in the information and click on “Next: Permissions”.
 
 <a href="images/AWS/AWS17.jpg"><img src="images/AWS/AWS17.jpg" class="screenshot" /></a>
-Click on “Next: Review”.
+17. Click on “Next: Review”.
 
 <a href="images/AWS/AWS18.jpg"><img src="images/AWS/AWS18.jpg" class="screenshot" /></a>
-Click on “Create user”.
+18. Click on “Create user”.
 
 <a href="images/AWS/AWS19.jpg"><img src="images/AWS/AWS19.jpg" class="screenshot" /></a>
-Click on “Close”.
+19. Click on “Close”.
 
 <a href="images/AWS/AWS20.jpg"><img src="images/AWS/AWS20.jpg" class="screenshot" /></a>
-Now, click on the user you just created.
+20. Now, click on the user you just created.
 
 <a href="images/AWS/AWS21.jpg"><img src="images/AWS/AWS21.jpg" class="screenshot" /></a>
-Then, click on the “Security credentials” tab.
+21. Then, click on the “Security credentials” tab.
 
 <a href="images/AWS/AWS22.jpg"><img src="images/AWS/AWS22.jpg" class="screenshot" /></a>
-Click on “Create access key”.
+22. Click on “Create access key”.
 
 <a href="images/AWS/AWS23.jpg"><img src="images/AWS/AWS23.jpg" class="screenshot" /></a>
-Click on “Download .csv file” to save the access key ID and secret access key to a CSV file on your computer. Store the file in a secure location. You will not have access to the secret access key again after this dialog box closes. After you have downloaded the CSV file, choose “Close”.
+23. Click on “Download .csv file” to save the access key ID and secret access key to a CSV file on your computer. Store the file in a secure location. You will not have access to the secret access key again after this dialog box closes. After you have downloaded the CSV file, choose “Close”.
 
 In case you need more information about access keys, click [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
 
